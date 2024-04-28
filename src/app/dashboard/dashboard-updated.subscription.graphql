@@ -1,0 +1,5 @@
+subscription dashboardUpdated{
+  dashboardUpdated {
+    name
+  }
+}

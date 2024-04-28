@@ -27,9 +27,20 @@ export type CreateBookmarkInput = {
   name: Scalars['String'];
 };
 
+export type CreateDashboardInput = {
+  name: Scalars['String'];
+};
+
 export type CreateUserInput = {
   email: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type Dashboard = {
+  __typename?: 'Dashboard';
+  Widgets: Array<Widget>;
+  _id: Scalars['String'];
+  name: Scalars['String'];
 };
 
 export type Link = {
@@ -43,13 +54,20 @@ export type Link = {
 export type Mutation = {
   __typename?: 'Mutation';
   createBookmark: Bookmark;
+  createDashboard: Dashboard;
   createUser: User;
   updateBookmark: Bookmark;
+  updateDashboard: Dashboard;
 };
 
 
 export type MutationCreateBookmarkArgs = {
   createBookmarkData: CreateBookmarkInput;
+};
+
+
+export type MutationCreateDashboardArgs = {
+  createDashboardData: CreateDashboardInput;
 };
 
 
@@ -62,16 +80,28 @@ export type MutationUpdateBookmarkArgs = {
   updateBookmarkData: UpdateBookmarkInput;
 };
 
+
+export type MutationUpdateDashboardArgs = {
+  updateDashboardData: UpdateDashboardInput;
+};
+
 export type Query = {
   __typename?: 'Query';
   bookmark: Bookmark;
   bookmarks: Array<Bookmark>;
+  dashboard: Dashboard;
+  dashboards: Array<Dashboard>;
   links: Array<Link>;
   user: User;
 };
 
 
 export type QueryBookmarkArgs = {
+  _id: Scalars['String'];
+};
+
+
+export type QueryDashboardArgs = {
   _id: Scalars['String'];
 };
 
@@ -85,15 +115,36 @@ export type QueryUserArgs = {
   _id: Scalars['String'];
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  dashboardUpdated: Dashboard;
+};
+
 export type UpdateBookmarkInput = {
   _id: Scalars['String'];
   links: Array<Scalars['String']>;
+};
+
+export type UpdateDashboardInput = {
+  Widgets: Array<WidgetDashboardInputInput>;
+  _id: Scalars['String'];
 };
 
 export type User = {
   __typename?: 'User';
   _id: Scalars['String'];
   email: Scalars['String'];
+};
+
+export type Widget = {
+  __typename?: 'Widget';
+  name: Scalars['String'];
+  values: Array<Scalars['String']>;
+};
+
+export type WidgetDashboardInputInput = {
+  name: Scalars['String'];
+  values: Array<Scalars['String']>;
 };
 
 export type CreateUserMutationVariables = Exact<{
@@ -135,6 +186,11 @@ export type CreateBookmarkMutationVariables = Exact<{
 
 
 export type CreateBookmarkMutation = { __typename?: 'Mutation', createBookmark: { __typename?: 'Bookmark', _id: string, name: string, userId: string } };
+
+export type DashboardUpdatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DashboardUpdatedSubscription = { __typename?: 'Subscription', dashboardUpdated: { __typename?: 'Dashboard', name: string } };
 
 export const CreateUserDocument = gql`
     mutation createUser($createUserData: CreateUserInput!) {
@@ -254,6 +310,24 @@ export const CreateBookmarkDocument = gql`
   })
   export class CreateBookmarkGQL extends Apollo.Mutation<CreateBookmarkMutation, CreateBookmarkMutationVariables> {
     document = CreateBookmarkDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DashboardUpdatedDocument = gql`
+    subscription dashboardUpdated {
+  dashboardUpdated {
+    name
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DashboardUpdatedGQL extends Apollo.Subscription<DashboardUpdatedSubscription, DashboardUpdatedSubscriptionVariables> {
+    document = DashboardUpdatedDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
